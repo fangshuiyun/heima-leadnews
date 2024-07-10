@@ -149,21 +149,21 @@ public class ResponseResult<T> implements Serializable {
 
 
         //新增，修改，删除  在项目中统一返回成功即可
-       /* ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.SUCCESS);
+        /*ResponseResult result = ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
         System.out.println(JSON.toJSONString(result));*/
 
 
         //根据不用的业务返回不同的提示信息  比如：当前操作需要登录、参数错误
-        /*ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+        /*ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN,"自定义提示信息");
         System.out.println(JSON.toJSONString(result));*/
 
         //查询分页信息
-//        PageResponseResult responseResult = new PageResponseResult(1,5,50);
-//        List list = new ArrayList();
-//        list.add("itcast");
-//        list.add("itheima");
-//        responseResult.setData(list);
-//        System.out.println(JSON.toJSONString(responseResult));
+        PageResponseResult responseResult = new PageResponseResult(1,5,50);
+        List list = new ArrayList();
+        list.add("itcast");
+        list.add("itheima");
+        responseResult.setData(list);
+        System.out.println(JSON.toJSONString(responseResult));
 
     }
 
