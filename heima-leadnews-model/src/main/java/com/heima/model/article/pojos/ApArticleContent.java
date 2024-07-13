@@ -12,7 +12,7 @@ import java.io.Serializable;
 @TableName("ap_article_content")
 public class ApArticleContent implements Serializable {
 
-    @TableId(value = "id",type = IdType.ID_WORKER)
+    @TableId(value = "id",type = IdType.ASSIGN_ID)
     private Long id;
 
     /**

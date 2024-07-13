@@ -110,9 +110,15 @@ public class AppJwtUtil {
        /* Map map = new HashMap();
         map.put("id","11");*/
         System.out.println(AppJwtUtil.getToken(1102L));
-        Jws<Claims> jws = AppJwtUtil.getJws("eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAADWLQQqEMAwA_5KzhURNt_qb1KZYQSi0wi6Lf9942NsMw3zh6AVW2DYmDGl2WabkZgreCaM6VXzhFBfJMcMARTqsxIG9Z888QLui3e3Tup5Pb81013KKmVzJTGo11nf9n8v4nMUaEY73DzTabjmDAAAA.4SuqQ42IGqCgBai6qd4RaVpVxTlZIWC826QA9kLvt9d-yVUw82gU47HDaSfOzgAcloZedYNNpUcd18Ne8vvjQA");
+        Jws<Claims> jws = AppJwtUtil.getJws("eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAC2L0QqDMAwA_yXPFkw6a-LfxDawDoRCK2yM_bsR9nbHcV94jQobRGHKO-UwG1F4mEkQ1hJy4ZjKWjRyggmqDtgwIQuvssgE_dz97p8-7Lh7765Pq4e66VnctDVne7f_KbjcZ_WGONPvAsM25luDAAAA._HLSpxHpSl4KZbYtSx1xnyeaRpsJTQ5xz6wMfFehqUr5etW6pOhCuP4EdrhSBefJZ5evmfYcUAj_dbHkLVdxSQ");
         Claims claims = jws.getBody();
+        int i = AppJwtUtil.verifyToken(claims);
+        System.out.println(i);
         System.out.println(claims.get("id"));
+        /*Date date = new Date(20000000000000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String format = sdf.format(date);
+        System.out.println(format);*/
 
     }
 
