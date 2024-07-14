@@ -75,12 +75,12 @@
     </#list>
 </table>
 <hr>
-<#--
+
 当前的日期为：${today?datetime}<br>
-当前的日期为：${today?string("yyyy年MM月")}-->
+当前的日期为：${today?string("yyyy年MM月")}
 
 -----------------------------------------------------<br>
-<#--${point?c}-->
+${point?c}
 
 </body>
 </html>

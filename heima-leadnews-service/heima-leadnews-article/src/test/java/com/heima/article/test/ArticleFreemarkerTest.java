@@ -11,7 +11,6 @@ import com.heima.model.article.pojos.ApArticle;
 import com.heima.model.article.pojos.ApArticleContent;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,27 +43,26 @@ public class ArticleFreemarkerTest {
     @Test
     public void createStaticUrlTest() throws Exception {
         //1.获取文章内容
-        ApArticleContent apArticleContent = apArticleContentMapper.selectOne(Wrappers.<ApArticleContent>lambdaQuery().eq(ApArticleContent::getArticleId, 1404705243362627586L));
-        if(apArticleContent != null && StringUtils.isNotBlank(apArticleContent.getContent())){
-            //2.文章内容通过freemarker生成html文件
-            StringWriter out = new StringWriter();
-            Template template = configuration.getTemplate("article.ftl");
+        ApArticleContent apArticleContent = apArticleContentMapper.selectOne(Wrappers.<ApArticleContent>lambdaQuery().eq(ApArticleContent::getArticleId, 1383827787629252610L));
+        //2.文章内容通过freemarker生成html文件
+        StringWriter out = new StringWriter();
+        Template template = configuration.getTemplate("article.ftl");
 
-            Map<String, Object> params = new HashMap<>();
-            params.put("content", JSONArray.parseArray(apArticleContent.getContent()));
+        Map<String, Object> params = new HashMap<>();
+        params.put("content", JSONArray.parseArray(apArticleContent.getContent()));
 
-            template.process(params, out);
-            InputStream is = new ByteArrayInputStream(out.toString().getBytes());
+        template.process(params, out);
+        InputStream is = new ByteArrayInputStream(out.toString().getBytes());
 
-            //3.把html文件上传到minio中
-            String path = fileStorageService.uploadHtmlFile("", apArticleContent.getArticleId() + ".html", is);
+        //3.把html文件上传到minio中
+        String path = fileStorageService.uploadHtmlFile("", apArticleContent.getArticleId() + ".html", is);
 
-            //4.修改ap_article表，保存static_url字段
-            ApArticle article = new ApArticle();
-            article.setId(apArticleContent.getArticleId());
-            article.setStaticUrl(path);
-            apArticleMapper.updateById(article);
+        //4.修改ap_article表，保存static_url字段
+        ApArticle article = new ApArticle();
+        article.setId(apArticleContent.getArticleId());
+        article.setStaticUrl(path);
+        apArticleMapper.updateById(article);
 
-        }
+
     }
 }

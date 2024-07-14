@@ -21,6 +21,7 @@ import com.heima.utils.thread.WmThreadLocalUtil;
 import com.heima.wemedia.mapper.WmMaterialMapper;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
+import com.heima.wemedia.service.WmNewsAutoScanService;
 import com.heima.wemedia.service.WmNewsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -92,6 +93,9 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         return responseResult;
     }
 
+    @Autowired
+    private WmNewsAutoScanService wmNewsAutoScanService;
+
     /**
      * 发布修改文章或保存为草稿
      * @param dto
@@ -130,11 +134,14 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
         //3.不是草稿，保存文章内容图片与素材的关系
         //获取到文章内容中的图片信息
-        List<String> materials = ectractUrlInfo(dto.getContent());
+        List<String> materials =  ectractUrlInfo(dto.getContent());
         saveRelativeInfoForContent(materials,wmNews.getId());
 
         //4.不是草稿，保存文章封面图片与素材的关系，如果当前布局是自动，需要匹配封面图片
         saveRelativeInfoForCover(dto,wmNews,materials);
+
+        //审核文章
+        wmNewsAutoScanService.autoScanWmNews(wmNews.getId());
 
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
 
@@ -177,7 +184,6 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             }
             updateById(wmNews);
         }
-        //第二个功能：保存封面图片与素材的关系
         if(images != null && images.size() > 0){
             saveRelativeInfo(images,wmNews.getId(),WemediaConstants.WM_COVER_REFERENCE);
         }
@@ -204,7 +210,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
      * @param type
      */
     private void saveRelativeInfo(List<String> materials, Integer newsId, Short type) {
-        if(materials != null && !materials.isEmpty()){
+        if(materials!=null && !materials.isEmpty()){
             //通过图片的url查询素材的id
             List<WmMaterial> dbMaterials = wmMaterialMapper.selectList(Wrappers.<WmMaterial>lambdaQuery().in(WmMaterial::getUrl, materials));
 
@@ -223,6 +229,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             //批量保存
             wmNewsMaterialMapper.saveRelations(idList,newsId,type);
         }
+
     }
 
 
@@ -268,6 +275,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             wmNewsMaterialMapper.delete(Wrappers.<WmNewsMaterial>lambdaQuery().eq(WmNewsMaterial::getNewsId,wmNews.getId()));
             updateById(wmNews);
         }
+
     }
 
 

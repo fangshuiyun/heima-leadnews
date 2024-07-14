@@ -20,24 +20,30 @@ import java.util.*;
 @RunWith(SpringRunner.class)
 public class FreemarkerTest {
 
+
     @Autowired
     private Configuration configuration;
 
     @Test
     public void test() throws IOException, TemplateException {
-        //freemarker的模板对象，获取模板
         Template template = configuration.getTemplate("02-list.ftl");
-        Map params = getData();
-        //合成
-        //第一个参数 数据模型
-        //第二个参数  输出流
-        template.process(params, new FileWriter("d:/list.html"));
+
+        /**
+         * 合成方法
+         *
+         * 两个参数
+         * 第一个参数：模型数据
+         * 第二个参数：输出流
+         */
+        template.process(getData(),new FileWriter("d:/list.html"));
     }
 
-    private Map getData() {
-        Map<String, Object> map = new HashMap<>();
 
-        //小强对象模型数据
+    private Map getData(){
+
+        Map<String,Object> map = new HashMap<>();
+
+        //------------------------------------
         Student stu1 = new Student();
         stu1.setName("小强");
         stu1.setAge(18);
@@ -55,18 +61,23 @@ public class FreemarkerTest {
         stus.add(stu1);
         stus.add(stu2);
 
-        //向map中存放List集合数据
-        map.put("stus", stus);
+        //向model中存放List集合数据
+        map.put("stus",stus);
 
 
-        //创建Map数据
-        HashMap<String, Student> stuMap = new HashMap<>();
-        stuMap.put("stu1", stu1);
-        stuMap.put("stu2", stu2);
-        //向map中存放Map数据
-        map.put("stuMap", stuMap);
+        //map数据
+        Map<String,Student> stuMap = new HashMap<>();
+        stuMap.put("stu1",stu1);
+        stuMap.put("stu2",stu2);
 
-        //返回Map
+        map.put("stuMap",stuMap);
+        //日期
+        map.put("today",new Date());
+
+        //长数值
+        map.put("point",38473897438743L);
+
         return map;
+
     }
 }

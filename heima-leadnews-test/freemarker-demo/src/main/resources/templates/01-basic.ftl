@@ -9,7 +9,7 @@
 Hello ${name!'-----------'} <br>
 <hr>
 <b>对象Student中的数据展示：</b><br/>
-姓名：${(stu.name)!''}<br/>
+姓名：${stu.name}<br/>
 年龄：${stu.age}
 <hr>
 </body>
