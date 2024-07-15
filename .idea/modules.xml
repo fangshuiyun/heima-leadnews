@@ -15,6 +15,7 @@
       <module fileurl="file://$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-wemedia/heima-leadnews-wemedia.iml" filepath="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-wemedia/heima-leadnews-wemedia.iml" />
       <module fileurl="file://$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-wemedia-gateway/heima-leadnews-wemedia-gateway.iml" filepath="$PROJECT_DIR$/heima-leadnews-gateway/heima-leadnews-wemedia-gateway/heima-leadnews-wemedia-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/heima-leadnews-test/minio-demo/minio-demo.iml" filepath="$PROJECT_DIR$/heima-leadnews-test/minio-demo/minio-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/heima-leadnews-test/tess4j-demo/tess4j-demo.iml" filepath="$PROJECT_DIR$/heima-leadnews-test/tess4j-demo/tess4j-demo.iml" />
     </modules>
   </component>
 </project>
