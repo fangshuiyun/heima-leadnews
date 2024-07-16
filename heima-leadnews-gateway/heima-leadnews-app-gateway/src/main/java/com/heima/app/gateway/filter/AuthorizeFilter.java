@@ -30,14 +30,13 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
             return chain.filter(exchange);
         }
 
-
         //3.获取token
         String token = request.getHeaders().getFirst("token");
 
         //4.判断token是否存在
         if(StringUtils.isBlank(token)){
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();  //结束请求，返回401
+            return response.setComplete();
         }
 
         //5.判断token是否有效
@@ -49,10 +48,18 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
             }
-        }catch (Exception e){
+
+            //获取用户信息
+            Object userId = claimsBody.get("id");
+
+            //存储header中
+            ServerHttpRequest serverHttpRequest = request.mutate().headers(httpHeaders -> {
+                httpHeaders.add("userId", userId + "");
+            }).build();
+            //重置请求
+            exchange.mutate().request(serverHttpRequest);
+        } catch (Exception e) {
             e.printStackTrace();
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
         }
 
         //6.放行
@@ -60,7 +67,7 @@ public class AuthorizeFilter implements Ordered, GlobalFilter {
     }
 
     /**
-     * 多个过滤器  优先级设置  值越小  优先级越高
+     * 优先级设置  值越小  优先级越高
      * @return
      */
     @Override
