@@ -59,15 +59,15 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
             apUserSearchService.insert(dto.getSearchWords(), user.getId());
         }
 
-
         //2.设置查询条件
         SearchRequest searchRequest = new SearchRequest("app_info_article");
+        //条件构建器
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
         //布尔查询
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        //关键字的分词之后查询
+        //关键字的分词之后查询   我想买一个手机  --》 我  一个  手机
         QueryStringQueryBuilder queryStringQueryBuilder = QueryBuilders.queryStringQuery(dto.getSearchWords()).field("title").field("content").defaultOperator(Operator.OR);
         boolQueryBuilder.must(queryStringQueryBuilder);
 

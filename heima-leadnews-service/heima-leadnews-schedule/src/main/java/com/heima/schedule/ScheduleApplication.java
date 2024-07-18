@@ -11,10 +11,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @MapperScan("com.heima.schedule.mapper")
-@EnableScheduling  //开启调度任务
+@EnableScheduling
 public class ScheduleApplication {
 
     public static void main(String[] args) {
+        System.out.println("创建分支测试");
+        System.out.println("合并分支测试");
         SpringApplication.run(ScheduleApplication.class,args);
     }
 

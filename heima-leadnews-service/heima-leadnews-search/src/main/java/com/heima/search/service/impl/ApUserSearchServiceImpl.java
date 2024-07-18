@@ -73,12 +73,14 @@ public class ApUserSearchServiceImpl implements ApUserSearchService {
     public ResponseResult findUserSearch() {
         //获取当前用户
         ApUser user = AppThreadLocalUtil.getUser();
-        if(user == null){
+        /*if(user == null){
             return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
-        }
+        }*/
 
         //根据用户查询数据，按照时间倒序
-        List<ApUserSearch> apUserSearches = mongoTemplate.find(Query.query(Criteria.where("userId").is(user.getId())).with(Sort.by(Sort.Direction.DESC, "createdTime")), ApUserSearch.class);
+        List<ApUserSearch> apUserSearches = mongoTemplate.find(Query.query(Criteria.where("userId")
+                .is(user.getId()))
+                .with(Sort.by(Sort.Direction.DESC, "createdTime")), ApUserSearch.class);
         return ResponseResult.okResult(apUserSearches);
     }
 

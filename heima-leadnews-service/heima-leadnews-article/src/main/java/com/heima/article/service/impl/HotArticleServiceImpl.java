@@ -30,7 +30,6 @@ public class HotArticleServiceImpl implements HotArticleService {
 
     @Autowired
     private ApArticleMapper apArticleMapper;
-    private ResponseResult responseResult;
 
     /**
      * 计算热点文章
@@ -123,20 +122,20 @@ public class HotArticleServiceImpl implements HotArticleService {
      * @return
      */
     private Integer computeScore(ApArticle apArticle) {
-        Integer scere = 0;
+        Integer score = 0;
         if(apArticle.getLikes() != null){
-            scere += apArticle.getLikes() * ArticleConstants.HOT_ARTICLE_LIKE_WEIGHT;
+            score += apArticle.getLikes() * ArticleConstants.HOT_ARTICLE_LIKE_WEIGHT;
         }
         if(apArticle.getViews() != null){
-            scere += apArticle.getViews();
+            score += apArticle.getViews();
         }
         if(apArticle.getComment() != null){
-            scere += apArticle.getComment() * ArticleConstants.HOT_ARTICLE_COMMENT_WEIGHT;
+            score += apArticle.getComment() * ArticleConstants.HOT_ARTICLE_COMMENT_WEIGHT;
         }
         if(apArticle.getCollection() != null){
-            scere += apArticle.getCollection() * ArticleConstants.HOT_ARTICLE_COLLECTION_WEIGHT;
+            score += apArticle.getCollection() * ArticleConstants.HOT_ARTICLE_COLLECTION_WEIGHT;
         }
 
-        return scere;
+        return score;
     }
 }

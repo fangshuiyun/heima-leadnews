@@ -49,6 +49,8 @@ public class RedisTest {
         //按照分值获取数据
         Set<String> zset_key_001 = cacheService.zRangeByScore("zset_key_001", 0, 8888);
         System.out.println(zset_key_001);
+
+
     }
 
     @Test
@@ -95,5 +97,4 @@ public class RedisTest {
         });
         System.out.println("使用管道技术执行10000次自增操作共耗时:"+(System.currentTimeMillis()-start)+"毫秒");
     }
-
 }

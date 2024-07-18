@@ -13,10 +13,12 @@
         <module name="heima-leadnews-wemedia-gateway" />
         <module name="heima-leadnews-wemedia" />
         <module name="tess4j-demo" />
+        <module name="heima-leadnews-behavior" />
         <module name="heima-leadnews-feign-api" />
         <module name="heima-leadnews-user" />
         <module name="heima-leadnews-article" />
         <module name="kafka-demo" />
+        <module name="heima-leadnews-admin" />
         <module name="task-demo" />
         <module name="xxljob-demo" />
         <module name="es-init" />
@@ -39,10 +41,12 @@
       <module name="freemarker-demo" options="-parameters" />
       <module name="heima-file-starter" options="-parameters" />
       <module name="heima-leadnews" options="-parameters" />
+      <module name="heima-leadnews-admin" options="-parameters" />
       <module name="heima-leadnews-apis" options="-parameters" />
       <module name="heima-leadnews-app-gateway" options="-parameters" />
       <module name="heima-leadnews-article" options="-parameters" />
       <module name="heima-leadnews-basic" options="-parameters" />
+      <module name="heima-leadnews-behavior" options="-parameters" />
       <module name="heima-leadnews-common" options="-parameters" />
       <module name="heima-leadnews-feign-api" options="-parameters" />
       <module name="heima-leadnews-gateway" options="-parameters" />

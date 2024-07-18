@@ -35,7 +35,7 @@ public class ConsumerQuickStart {
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(prop);
 
         //3.订阅主题
-        consumer.subscribe(Collections.singletonList("topic-first"));
+        consumer.subscribe(Collections.singletonList("itcast-topic-out"));
 
         //4.拉取消息
 
@@ -46,8 +46,8 @@ public class ConsumerQuickStart {
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
                     System.out.println(consumerRecord.key());
                     System.out.println(consumerRecord.value());
-                    System.out.println(consumerRecord.offset());
-                    System.out.println(consumerRecord.partition());
+                   /* System.out.println(consumerRecord.offset());
+                    System.out.println(consumerRecord.partition());*/
                 }
                 //异步提交偏移量
                 consumer.commitAsync();
