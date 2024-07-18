@@ -4,19 +4,18 @@ import com.heima.article.service.ApArticleService;
 import com.heima.common.constants.ArticleConstants;
 import com.heima.model.article.dtos.ArticleHomeDto;
 import com.heima.model.common.dtos.ResponseResult;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api/v1/article")
 public class ArticleHomeController {
 
-//    @Autowired
+
+    @Autowired
     private ApArticleService apArticleService;
 
     /**
@@ -26,26 +25,17 @@ public class ArticleHomeController {
      */
     @PostMapping("/load")
     public ResponseResult load(@RequestBody ArticleHomeDto dto){
-        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_MORE);
+        //        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_MORE);
+        return apArticleService.load2(dto, ArticleConstants.LOADTYPE_LOAD_MORE,true);
     }
 
-    /**
-     * 加载更多
-     * @param dto
-     * @return
-     */
     @PostMapping("/loadmore")
-    public ResponseResult loadmore(@RequestBody ArticleHomeDto dto){
-        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_MORE);
+    public ResponseResult loadMore(@RequestBody ArticleHomeDto dto) {
+        return apArticleService.load(ArticleConstants.LOADTYPE_LOAD_MORE,dto);
     }
 
-    /**
-     * 加载最新
-     * @param dto
-     * @return
-     */
     @PostMapping("/loadnew")
-    public ResponseResult loadnew(@RequestBody ArticleHomeDto dto){
-        return apArticleService.load(dto, ArticleConstants.LOADTYPE_LOAD_NEW);
+    public ResponseResult loadNew(@RequestBody ArticleHomeDto dto) {
+        return apArticleService.load(ArticleConstants.LOADTYPE_LOAD_NEW,dto);
     }
 }

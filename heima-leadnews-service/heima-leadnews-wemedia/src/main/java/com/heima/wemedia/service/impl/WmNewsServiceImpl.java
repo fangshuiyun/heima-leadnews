@@ -1,6 +1,5 @@
 package com.heima.wemedia.service.impl;
 
-
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,15 +12,19 @@ import com.heima.common.exception.CustomException;
 import com.heima.model.common.dtos.PageResponseResult;
 import com.heima.model.common.dtos.ResponseResult;
 import com.heima.model.common.enums.AppHttpCodeEnum;
+import com.heima.model.wemedia.dtos.NewsAuthDto;
 import com.heima.model.wemedia.dtos.WmNewsDto;
 import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.model.wemedia.pojos.WmMaterial;
 import com.heima.model.wemedia.pojos.WmNews;
 import com.heima.model.wemedia.pojos.WmNewsMaterial;
+import com.heima.model.wemedia.pojos.WmUser;
+import com.heima.model.wemedia.vo.WmNewsVo;
 import com.heima.utils.thread.WmThreadLocalUtil;
 import com.heima.wemedia.mapper.WmMaterialMapper;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
+import com.heima.wemedia.mapper.WmUserMapper;
 import com.heima.wemedia.service.WmNewsAutoScanService;
 import com.heima.wemedia.service.WmNewsService;
 import com.heima.wemedia.service.WmNewsTaskService;
@@ -39,56 +42,62 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
-public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> implements WmNewsService {
+public class WmNewsServiceImpl  extends ServiceImpl<WmNewsMapper, WmNews> implements WmNewsService {
 
     /**
-     * 条件查询文章列表
-     *
+     * 查询文章
      * @param dto
      * @return
      */
     @Override
-    public ResponseResult findList(WmNewsPageReqDto dto) {
+    public ResponseResult findAll(WmNewsPageReqDto dto) {
+
         //1.检查参数
-        //分页检查
+        if(dto == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //分页参数检查
         dto.checkParam();
+        //获取当前登录人的信息
+        WmUser user = WmThreadLocalUtil.getUser();
+        if(user == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+        }
 
         //2.分页条件查询
-        IPage page = new Page(dto.getPage(), dto.getSize());
-        LambdaQueryWrapper<WmNews> lambdaQueryWrapper = new LambdaQueryWrapper();
+        IPage page = new Page(dto.getPage(),dto.getSize());
+        LambdaQueryWrapper<WmNews> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //状态精确查询
-        if (dto.getStatus() != null) {
-            lambdaQueryWrapper.eq(WmNews::getStatus, dto.getStatus());
+        if(dto.getStatus() != null){
+            lambdaQueryWrapper.eq(WmNews::getStatus,dto.getStatus());
         }
 
         //频道精确查询
-        if (dto.getChannelId() != null) {
-            lambdaQueryWrapper.eq(WmNews::getChannelId, dto.getChannelId());
+        if(dto.getChannelId() != null){
+            lambdaQueryWrapper.eq(WmNews::getChannelId,dto.getChannelId());
         }
 
         //时间范围查询
-        if (dto.getBeginPubDate() != null && dto.getEndPubDate() != null) {
-            lambdaQueryWrapper.between(WmNews::getPublishTime, dto.getBeginPubDate(), dto.getEndPubDate());
+        if(dto.getBeginPubDate()!=null && dto.getEndPubDate()!=null){
+            lambdaQueryWrapper.between(WmNews::getPublishTime,dto.getBeginPubDate(),dto.getEndPubDate());
         }
 
-        //关键字的模糊查询
-        if (StringUtils.isNotBlank(dto.getKeyword())) {
-            lambdaQueryWrapper.like(WmNews::getTitle, dto.getKeyword());
+        //关键字模糊查询
+        if(StringUtils.isNotBlank(dto.getKeyword())){
+            lambdaQueryWrapper.like(WmNews::getTitle,dto.getKeyword());
         }
 
-        //查询当前登录人的文章
-        lambdaQueryWrapper.eq(WmNews::getUserId, WmThreadLocalUtil.getUser().getId());
+        //查询当前登录用户的文章
+        lambdaQueryWrapper.eq(WmNews::getUserId,user.getId());
 
-        //按照发布时间倒序查询
-        lambdaQueryWrapper.orderByDesc(WmNews::getPublishTime);
+        //发布时间倒序查询
+        lambdaQueryWrapper.orderByDesc(WmNews::getCreatedTime);
 
-
-        page = page(page, lambdaQueryWrapper);
+        page = page(page,lambdaQueryWrapper);
 
         //3.结果返回
-        ResponseResult responseResult = new PageResponseResult(dto.getPage(), dto.getSize(), (int) page.getTotal());
+        ResponseResult responseResult = new PageResponseResult(dto.getPage(),dto.getSize(),(int)page.getTotal());
         responseResult.setData(page.getRecords());
-
 
         return responseResult;
     }
@@ -98,7 +107,6 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
     @Autowired
     private WmNewsTaskService wmNewsTaskService;
-
 
     /**
      * 发布修改文章或保存为草稿
@@ -146,6 +154,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
         //审核文章
 //        wmNewsAutoScanService.autoScanWmNews(wmNews.getId());
+
         wmNewsTaskService.addNewsToTask(wmNews.getId(),wmNews.getPublishTime());
 
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
@@ -215,7 +224,7 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
      * @param type
      */
     private void saveRelativeInfo(List<String> materials, Integer newsId, Short type) {
-        if(materials!=null && materials.size() > 0){
+        if(materials!=null && !materials.isEmpty()){
             //通过图片的url查询素材的id
             List<WmMaterial> dbMaterials = wmMaterialMapper.selectList(Wrappers.<WmMaterial>lambdaQuery().in(WmMaterial::getUrl, materials));
 
@@ -283,8 +292,28 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
     }
 
+    /**
+     * 查询文章详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult findOne(Integer id) {
+        //1.检查参数
+        if(id == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //2.查询文章
+        WmNews wmNews = getById(id);
+        if(wmNews == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+        //3.结果返回
+        return ResponseResult.okResult(wmNews);
+    }
+
     @Autowired
-    private KafkaTemplate<String,String> kafkaTemplate;
+    private KafkaTemplate kafkaTemplate;
 
     /**
      * 文章的上下架
@@ -314,15 +343,119 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
             update(Wrappers.<WmNews>lambdaUpdate().set(WmNews::getEnable,dto.getEnable())
                     .eq(WmNews::getId,wmNews.getId()));
 
+            //发送消息，通知article端修改文章配置
             if(wmNews.getArticleId() != null){
-                //发送消息，通知article修改文章的配置
                 Map<String,Object> map = new HashMap<>();
                 map.put("articleId",wmNews.getArticleId());
                 map.put("enable",dto.getEnable());
-                kafkaTemplate.send(WmNewsMessageConstants.WM_NEWS_UP_OR_DOWN_TOPIC, JSON.toJSONString(map));
+                kafkaTemplate.send(WmNewsMessageConstants.WM_NEWS_UP_OR_DOWN_TOPIC,JSON.toJSONString(map));
             }
-
         }
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
+
+    @Autowired
+    private WmNewsMapper wmNewsMapper;
+
+    /**
+     * 查询文章列表
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult findList(NewsAuthDto dto) {
+        //1.参数检查
+        dto.checkParam();
+
+        //记录当前页
+        int currentPage = dto.getPage();
+
+        //2.分页查询+count查询
+        dto.setPage((dto.getPage()-1)*dto.getSize());
+        List<WmNewsVo> wmNewsVoList = wmNewsMapper.findListAndPage(dto);
+        int count = wmNewsMapper.findListCount(dto);
+
+        //3.结果返回
+        ResponseResult responseResult = new PageResponseResult(currentPage,dto.getSize(),count);
+        responseResult.setData(wmNewsVoList);
+        return responseResult;
+    }
+
+    @Autowired
+    private WmUserMapper wmUserMapper;
+
+    /**
+     * 查询文章详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult findWmNewsVo(Integer id) {
+        //1.检查参数
+        if(id == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //2.查询文章信息
+        WmNews wmNews = getById(id);
+        if(wmNews == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+
+        //3.查询用户信息
+        WmUser wmUser = wmUserMapper.selectById(wmNews.getUserId());
+
+        //4.封装vo返回
+        WmNewsVo vo = new WmNewsVo();
+        //属性拷贝
+        BeanUtils.copyProperties(wmNews,vo);
+        if(wmUser != null){
+            vo.setAuthorName(wmUser.getName());
+        }
+
+        ResponseResult responseResult = new ResponseResult().ok(vo);
+
+        return responseResult;
+    }
+
+    /**
+     * 文章审核，修改状态
+     * @param status 2  审核失败  4 审核成功
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult updateStatus(Short status, NewsAuthDto dto) {
+        //1.检查参数
+        if(dto == null || dto.getId() == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        //2.查询文章信息
+        WmNews wmNews = getById(dto.getId());
+        if(wmNews == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+
+        //3.修改文章的状态
+        wmNews.setStatus(status);
+        if(StringUtils.isNotBlank(dto.getMsg())){
+            wmNews.setReason(dto.getMsg());
+        }
+        updateById(wmNews);
+
+        //审核成功，则需要创建app端文章数据，并修改自媒体文章
+        if(status.equals(WemediaConstants.WM_NEWS_AUTH_PASS)){
+            //创建app端文章数据
+            ResponseResult responseResult = wmNewsAutoScanService.saveAppArticle(wmNews);
+            if(responseResult.getCode().equals(200)){
+                wmNews.setArticleId((Long) responseResult.getData());
+                wmNews.setStatus(WmNews.Status.PUBLISHED.getCode());
+                updateById(wmNews);
+            }
+        }
+
+        //4.返回
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+    }
+
+
 }

@@ -18,7 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan("com.heima.wemedia.mapper")
 @EnableFeignClients(basePackages = "com.heima.apis")
 @EnableAsync  //开启异步调用
-@EnableScheduling  //开启调度任务
+@EnableScheduling
 public class WemediaApplication {
 
     public static void main(String[] args) {

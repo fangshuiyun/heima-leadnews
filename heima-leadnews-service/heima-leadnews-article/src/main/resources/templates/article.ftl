@@ -173,7 +173,8 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/vant@2.12.20/lib/vant.min.js"></script>
 <!-- 引入 Axios 的 JS 文件 -->
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<#--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+<script src="../../../plugins/js/axios.min.js"></script>
 <!-- 页面逻辑 -->
 <script src="../../../plugins/js/index.js"></script>
 </body>

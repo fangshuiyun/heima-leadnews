@@ -1,5 +1,6 @@
 package com.heima.wemedia.service.impl;
 
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
-
 
 @Slf4j
 @Service
@@ -107,4 +107,5 @@ public class WmMaterialServiceImpl extends ServiceImpl<WmMaterialMapper, WmMater
         responseResult.setData(page.getRecords());
         return responseResult;
     }
+
 }

@@ -9,6 +9,7 @@ import com.heima.model.wemedia.pojos.WmNews;
 import com.heima.utils.common.ProtostuffUtil;
 import com.heima.wemedia.service.WmNewsAutoScanService;
 import com.heima.wemedia.service.WmNewsTaskService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -20,10 +21,12 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class WmNewsTaskServiceImpl implements WmNewsTaskService {
+public class WmNewsTaskServiceImpl  implements WmNewsTaskService {
+
 
     @Autowired
     private IScheduleClient scheduleClient;
+
 
     /**
      * 添加任务到延迟队列中
@@ -56,7 +59,7 @@ public class WmNewsTaskServiceImpl implements WmNewsTaskService {
     /**
      * 消费任务，审核文章
      */
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     @Override
     public void scanNewsByTask() {
 
@@ -70,4 +73,5 @@ public class WmNewsTaskServiceImpl implements WmNewsTaskService {
 
         }
     }
+    
 }

@@ -1,6 +1,9 @@
 package com.heima.wemedia.service;
 
+import com.heima.model.wemedia.pojos.WmNews;
+
 import java.util.Date;
+
 
 public interface WmNewsTaskService {
 
@@ -11,9 +14,8 @@ public interface WmNewsTaskService {
      */
     public void addNewsToTask(Integer id, Date publishTime);
 
-
     /**
-     * 消费任务，审核文章
+     * 消费延迟队列数据
      */
     public void scanNewsByTask();
 

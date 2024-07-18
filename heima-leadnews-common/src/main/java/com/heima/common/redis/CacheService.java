@@ -1426,7 +1426,7 @@ public class CacheService extends CachingConfigurerSupport {
             public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
                 StringRedisConnection stringRedisConnection = (StringRedisConnection)redisConnection;
                 String[] strings = values.toArray(new String[values.size()]);
-                stringRedisConnection.lPush(topic_key,strings);
+                stringRedisConnection.rPush(topic_key,strings);
                 stringRedisConnection.zRem(future_key,strings);
                 return null;
             }
@@ -1463,4 +1463,5 @@ public class CacheService extends CachingConfigurerSupport {
         }
         return null;
     }
+
 }

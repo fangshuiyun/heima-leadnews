@@ -57,8 +57,6 @@ public class ProducerQuickStart {
         //4.关闭消息通道  必须要关闭，否则消息发送不成功
         producer.close();
 
-
-
     }
 
 }

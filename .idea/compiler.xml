@@ -17,6 +17,8 @@
         <module name="heima-leadnews-user" />
         <module name="heima-leadnews-article" />
         <module name="kafka-demo" />
+        <module name="task-demo" />
+        <module name="xxljob-demo" />
         <module name="es-init" />
         <module name="heima-leadnews-schedule" />
         <module name="heima-leadnews-utils" />
@@ -56,7 +58,9 @@
       <module name="kafka-demo" options="-parameters" />
       <module name="minio-demo" options="-parameters" />
       <module name="mongo-demo" options="-parameters" />
+      <module name="task-demo" options="-parameters" />
       <module name="tess4j-demo" options="-parameters" />
+      <module name="xxljob-demo" options="-parameters" />
     </option>
   </component>
 </project>

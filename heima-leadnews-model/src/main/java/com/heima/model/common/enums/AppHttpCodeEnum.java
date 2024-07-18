@@ -30,7 +30,6 @@ public enum AppHttpCodeEnum {
     // 自媒体文章错误 3501~3600
     MATERIASL_REFERENCE_FAIL(3501,"素材引用失效");
 
-
     int code;
     String errorMessage;
 

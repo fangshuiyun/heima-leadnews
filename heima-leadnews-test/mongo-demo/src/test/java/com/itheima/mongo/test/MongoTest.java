@@ -50,8 +50,7 @@ public class MongoTest {
     //条件查询
     @Test
     public void testQuery(){
-        Query query = Query.query(Criteria.where("associateWords").is("黑马头条"))
-                .with(Sort.by(Sort.Direction.DESC,"createdTime"));
+        Query query = Query.query(Criteria.where("associateWords").is("黑马头条")).with(Sort.by(Sort.Direction.DESC,"createdTime"));
         List<ApAssociateWords> apAssociateWordsList = mongoTemplate.find(query, ApAssociateWords.class);
         System.out.println(apAssociateWordsList);
     }

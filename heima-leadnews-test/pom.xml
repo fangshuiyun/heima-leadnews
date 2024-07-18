@@ -14,11 +14,14 @@
     <modules>
         <module>freemarker-demo</module>
         <module>minio-demo</module>
-        <module>kafka-demo</module>
         <module>tess4j-demo</module>
-        <module>es-init</module>
+        <module>task-demo</module>
+        <module>kafka-demo</module>
         <module>mongo-demo</module>
+        <module>es-init</module>
+        <module>xxljob-demo</module>
     </modules>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

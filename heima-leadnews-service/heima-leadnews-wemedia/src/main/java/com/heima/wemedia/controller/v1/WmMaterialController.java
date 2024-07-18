@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/material")
 public class WmMaterialController {
 
+
     @Autowired
     private WmMaterialService wmMaterialService;
 
@@ -27,4 +28,5 @@ public class WmMaterialController {
     public ResponseResult findList(@RequestBody WmMaterialDto dto){
         return wmMaterialService.findList(dto);
     }
+
 }
