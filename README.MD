@@ -21,11 +21,15 @@
 
 ## 业务说明
 
-![image-20210407204405774](image\image-20210407204405774.png)
+<div align=center>
+<img src="./image/image-20210407204405774.png" width="600" /><br>
+</div>
 
 ## 技术栈
 
-![img](image\f3accd2ba01c41b0a9ac98370241eba3.png)
+<div align=center>
+<img src="./image/f3accd2ba01c41b0a9ac98370241eba3.png" width="600" /><br>
+</div>
 
 - Spring-Cloud-Gateway : 微服务之前架设的网关服务，实现服务注册中的API请求路由，以及控制流速控制和熔断处理都是常用的架构手段，而这些功能Gateway天然支持
 - 运用Spring Boot快速开发框架，构建项目工程；并结合Spring Cloud全家桶技术，实现后端个人中心、自媒体、管理中心等微服务。
