@@ -1208,3 +1208,146 @@ kafka介绍-名词解释
 - consumer：订阅消息并处理发布的消息的对象称之为主题消费者（consumers）
 
 - broker：已发布的消息保存在一组服务器中，称之为Kafka集群。集群中的每一个服务器都是一个代理（Broker）。 消费者可以订阅一个或多个主题（topic），并从Broker拉数据，从而消费这些已发布的消息。
+
+
+### kafka入门
+
+![image-20210525181412230](image\image-20210525181412230.png)
+
+- 生产者发送消息，多个消费者只能有一个消费者接收到消息
+- 生产者发送消息，多个消费者都可以接收到消息
+
+  
+生产者发送消息
+
+```java
+package com.heima.kafka.sample;
+
+import ...
+
+/**
+ * 生产者
+ */
+public class ProducerQuickStart {
+
+    public static void main(String[] args) {
+        //1.kafka的配置信息
+        Properties properties = new Properties();
+        //kafka的连接地址
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"192.168.200.130:9092");
+        //发送失败，失败的重试次数
+        properties.put(ProducerConfig.RETRIES_CONFIG,5);
+        //消息key的序列化器
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
+        //消息value的序列化器
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
+
+        //2.生产者对象
+        KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
+
+        //封装发送的消息
+        ProducerRecord<String,String> record = new ProducerRecord<String, String>("itheima-topic","100001","hello kafka");
+
+        //3.发送消息
+        producer.send(record);
+
+        //4.关闭消息通道，必须关闭，否则消息发送不成功
+        producer.close();
+    }
+
+}
+```
+
+消费者接收消息
+
+```java
+package com.heima.kafka.sample;
+
+import ...
+
+/**
+ * 消费者
+ */
+public class ConsumerQuickStart {
+
+    public static void main(String[] args) {
+        //1.添加kafka的配置信息
+        Properties properties = new Properties();
+        //kafka的连接地址
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.200.130:9092");
+        //消费者组
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "group2");
+        //消息的反序列化器
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+
+        //2.消费者对象
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
+
+        //3.订阅主题
+        consumer.subscribe(Collections.singletonList("itheima-topic"));
+
+        //当前线程一直处于监听状态
+        while (true) {
+            //4.获取消息
+            ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofMillis(1000));
+            for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
+                System.out.println(consumerRecord.key());
+                System.out.println(consumerRecord.value());
+            }
+        }
+
+    }
+
+}
+```
+
+
+总结
+
+- 生产者发送消息，多个消费者订阅同一个主题，只能有一个消费者收到消息（一对一）
+- 生产者发送消息，多个消费者订阅同一个主题，所有消费者都能收到消息（一对多）
+
+### kafka高可用设计
+
+#### 集群
+
+![image-20210530223101568](image\image-20210530223101568.png)
+
+- Kafka 的服务器端由被称为 Broker 的服务进程构成，即一个 Kafka 集群由多个 Broker 组成
+
+- 这样如果集群中某一台机器宕机，其他机器上的 Broker 也依然能够对外提供服务。这其实就是 Kafka 提供高可用的手段之一
+
+#### 5.2)备份机制(Replication）
+
+![image-20210530223218580](image\image-20210530223218580.png)
+
+Kafka 中消息的备份又叫做 副本（Replica）
+
+Kafka 定义了两类副本：
+
+- 领导者副本（Leader Replica）
+
+- 追随者副本（Follower Replica）
+
+**同步方式**
+
+![image-20210530223316815](image\image-20210530223316815.png)
+
+ISR（in-sync replica）需要同步复制保存的follower
+
+
+
+如果leader失效后，需要选出新的leader，选举的原则如下：
+
+第一：选举时优先从ISR中选定，因为这个列表中follower的数据是与leader同步的
+
+第二：如果ISR列表中的follower都不行了，就只能从其他follower中选取
+
+
+
+极端情况，就是所有副本都失效了，这时有两种方案
+
+第一：等待ISR中的一个活过来，选为Leader，数据可靠，但活过来的时间不确定
+
+第二：选择第一个活过来的Replication，不一定是ISR中的，选为leader，以最快速度恢复可用性，但数据不一定完整
