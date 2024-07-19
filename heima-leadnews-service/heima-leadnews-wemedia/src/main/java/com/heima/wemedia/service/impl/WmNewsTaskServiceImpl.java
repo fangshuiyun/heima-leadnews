@@ -59,7 +59,7 @@ public class WmNewsTaskServiceImpl  implements WmNewsTaskService {
     /**
      * 消费任务，审核文章
      */
-//    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
     @Override
     public void scanNewsByTask() {
 
