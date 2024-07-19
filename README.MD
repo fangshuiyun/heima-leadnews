@@ -9,11 +9,15 @@
 黑马头条项目采用当下火热的微服务+大数据技术架构实现。本项目主要着手于获取最新最热新闻资讯，
 通过大数据分析用户喜好精确推送咨询新闻。<br>
 
-![image-20210407204320559](image\image-20210407204320559.png)
+<div align=center>
+<img src="./image/image-20210407204320559.png" width="600" /><br>
+</div>
 
 ## 项目术语
 
-![image-20210407204345614](image\image-20210407204345614.png)
+<div align=center>
+<img src="./image/image-20210407204345614.png" width="600" /><br>
+</div>
 
 ## 业务说明
 
@@ -35,7 +39,9 @@
 
 ## 主体结构
 
-![image-20210412141711919](image\image-20210412141711919.png)
+<div align=center>
+<img src="./image/image-20210412141711919.png" width="600" /><br>
+</div>
 
 
 # 重点技术总结
@@ -44,7 +50,10 @@
 
 ### 需求分析
 
-![image-20210412141809919](image\image-20210412141809919.png)
+<div align=center>
+<img src="./image/image-20210412141809919.png" width="600" /><br>
+</div>
+
 
 - 用户点击**开始使用**
 
@@ -60,15 +69,22 @@ md5是不可逆加密，md5相同的密码每次加密都一样，不太安全�
 
 注册->生成盐
 
-![image-20210412142315248](image\image-20210412142315248.png)
+<div align=center>
+<img src="./image/image-20210412142315248.png" width="600" /><br>
+</div>
 
 登录->使用盐来配合验证
 
-![image-20210412142428499](image\image-20210412142428499.png)
+<div align=center>
+<img src="./image/image-20210412142428499.png" width="600" /><br>
+</div>
 
 ### 思路分析
 
-![image-20210412142536782](image\image-20210412142536782.png)
+<div align=center>
+<img src="./image/image-20210412142536782.png" width="600" /><br>
+</div>
+
 
 1，用户输入了用户名和密码进行登录，校验成功后返回jwt(基于当前用户的id生成)
 
@@ -124,7 +140,9 @@ public class ApUserServiceImpl extends ServiceImpl<ApUserMapper, ApUser> impleme
 
 ## 全局过滤器实现jwt校验
 
-![image-20210705110434492](image\image-20210705110434492.png)
+<div align=center>
+<img src="./image/image-20210705110434492.png" width="600" /><br>
+</div>
 
 思路分析：
 
@@ -216,7 +234,9 @@ FreeMarker是一款模板引擎：即一种基于模板和要改变的数据，�
 那就意味着要准备数据在真实编程语言中来显示，比如数据库查询和业务运算，之后模板显示已经准备好的数据。在模板中，
 你可以专注于如何展现数据， 而在模板之外可以专注于要展示什么数据。
 
-![1528820943975](image\1528820943975.png)
+<div align=center>
+<img src="./image/1528820943975.png" width="600" /><br>
+</div>
 
 常用的java模板引擎还有哪些？
 
@@ -313,13 +333,17 @@ public class HelloController {
 
 #### 测试
 
-![1576129529361](image\1576129529361.png)
+<div align=center>
+<img src="./image/1576129529361.png" width="600" /><br>
+</div>
 
 ### 静态化测试 
 
 使用freemarker原生Api将页面生成html文件，测试html文件生成的方法：
 
-![image-20210422163843108](image\image-20210422163843108.png)
+<div align=center>
+<img src="./image/image-20210422163843108.png" width="600" /><br>
+</div>
 
 #### 创建测试类
 
@@ -369,6 +393,7 @@ MinIO兼容亚马逊S3云存储服务接口，非常适合于存储大容量非�
 - bucket – 类比于文件系统的目录
 - Object – 类比文件系统的文件
 - Keys – 类比文件名
+
 
 官网文档：http://docs.minio.org.cn/docs/
 
@@ -721,7 +746,9 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 
 ## 将用户存入当前线程
 
-![image-20210426144603541](image\image-20210426144603541.png)
+<div align=center>
+<img src="./image/image-20210426144603541.png" width="600" /><br>
+</div>
 
 ①：网关进行token解析后，把解析后的用户信息存储到header中
 
@@ -838,11 +865,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 随着业务的增长，文章表可能要占用很大的物理存储空间，为了解决该问题，后期使用数据库分片技术。将一个数据库进行拆分，通过数据库中间件连接。如果数据库中该表选用ID自增策略，则可能产生重复的ID，此时应该使用分布式ID生成策略来生成ID。
 
-![image-20210505005448995](image\image-20210505005448995.png)
+<div align=center>
+<img src="./image/image-20210505005448995.png" width="600" /><br>
+</div>
 
 snowflake是Twitter开源的分布式ID生成算法，结果是一个long型的ID。其核心思想是：使用41bit作为毫秒数，10bit作为机器的ID（5个bit是数据中心，5个bit的机器ID），12bit作为毫秒内的流水号（意味着每个节点在每毫秒可以产生 4096 个 ID），最后还有一个符号位，永远是0
 
-![image-20210505005509258](image\image-20210505005509258.png)
+<div align=center>
+<img src="./image/image-20210505005509258.png" width="600" /><br>
+</div>
 
 mybatis-plus已经集成了雪花算法，完成以下两步即可在项目中集成雪花算法
 
@@ -875,7 +906,9 @@ workerId:机器id(取值范围：0-31)
 
 异步：调用在发出之后，这个调用就直接返回了，没有返回结果（分时处理）
 
-![image-20210507160912993](image\image-20210507160912993.png)
+<div align=center>
+<img src="./image/image-20210507160912993.png" width="600" /><br>
+</div>
 
 异步线程的方式审核文章
 
@@ -948,7 +981,9 @@ public class WemediaApplication {
 - 定时任务：有固定周期的，有明确的触发时间
 - 延迟队列：没有固定的开始时间，它常常是由一个事件触发的，而在这个事件触发之后的一段时间内触发另一个事件，任务可以立即执行，也可以延迟
 
-![image-20210513145942962](image\image-20210513145942962.png)
+<div align=center>
+<img src="./image/image-20210513145942962.png" width="600" /><br>
+</div>
 
 应用场景：
 
@@ -961,7 +996,9 @@ public class WemediaApplication {
 
 实现思路
 
-![image-20210513150440342](image\image-20210513150440342.png)
+<div align=center>
+<img src="./image/image-20210513150440342.png" width="600" /><br>
+</div>
 
 问题思路
 
@@ -1108,7 +1145,9 @@ public void scanNewsByTask() {
 
 启动两台heima-leadnews-schedule服务，每台服务都会去执行refresh定时任务方法
 
-![image-20210516112243712](image\image-20210516112243712.png)
+<div align=center>
+<img src="./image/image-20210516112243712.png" width="600" /><br>
+</div>
 
 ##### 分布式锁
 
@@ -1116,7 +1155,9 @@ public void scanNewsByTask() {
 
 解决方案：
 
-![image-20210516112457413](image\image-20210516112457413.png)
+<div align=center>
+<img src="./image/image-20210516112457413.png" width="600" /><br>
+</div>
 
 
 
@@ -1124,7 +1165,9 @@ public void scanNewsByTask() {
 
 sexnx （SET if Not eXists） 命令在指定的 key 不存在时，为 key 设置指定的值。
 
-![image-20210516112612399](image\image-20210516112612399.png)
+<div align=center>
+<img src="./image/image-20210516112612399.png" width="600" /><br>
+</div>
 
 这种加锁的思路是，如果 key 不存在则为 key 设置 value，如果 key 已存在则 SETNX 命令不做任何操作
 
@@ -1195,11 +1238,15 @@ public String tryLock(String name, long expire) {
 
 Kafka 是一个分布式流媒体平台,类似于消息队列或企业消息传递系统。kafka官网：http://kafka.apache.org/
 
-![image-20210525181028436](image\image-20210525181028436.png)
+<div align=center>
+<img src="./image/image-20210525181028436.png" width="600" /><br>
+</div>
 
 kafka介绍-名词解释
 
-![image-20210525181100793](image\image-20210525181100793.png)
+<div align=center>
+<img src="./image/image-20210525181100793.png" width="600" /><br>
+</div>
 
 - producer：发布消息的对象称之为主题生产者（Kafka topic producer）
 
@@ -1212,7 +1259,9 @@ kafka介绍-名词解释
 
 ### kafka入门
 
-![image-20210525181412230](image\image-20210525181412230.png)
+<div align=center>
+<img src="./image/image-20210525181412230.png" width="600" /><br>
+</div>
 
 - 生产者发送消息，多个消费者只能有一个消费者接收到消息
 - 生产者发送消息，多个消费者都可以接收到消息
@@ -1312,7 +1361,9 @@ public class ConsumerQuickStart {
 
 #### 集群
 
-![image-20210530223101568](image\image-20210530223101568.png)
+<div align=center>
+<img src="./image/image-20210530223101568.png" width="600" /><br>
+</div>
 
 - Kafka 的服务器端由被称为 Broker 的服务进程构成，即一个 Kafka 集群由多个 Broker 组成
 
@@ -1320,7 +1371,9 @@ public class ConsumerQuickStart {
 
 #### 5.2)备份机制(Replication）
 
-![image-20210530223218580](image\image-20210530223218580.png)
+<div align=center>
+<img src="./image/image-20210530223218580.png" width="600" /><br>
+</div>
 
 Kafka 中消息的备份又叫做 副本（Replica）
 
@@ -1332,7 +1385,9 @@ Kafka 定义了两类副本：
 
 **同步方式**
 
-![image-20210530223316815](image\image-20210530223316815.png)
+<div align=center>
+<img src="./image/image-20210530223316815.png" width="600" /><br>
+</div>
 
 ISR（in-sync replica）需要同步复制保存的follower
 
